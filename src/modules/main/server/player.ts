@@ -1,18 +1,32 @@
 import {RpgPlayer, RpgPlayerHooks, Control, Move, RpgClassMap, RpgMap} from '@rpgjs/server'
+import {Position} from "@rpgjs/server/lib/Player/Player";
+import {Player} from "./models/player";
 
 export const player: RpgPlayerHooks = {
-    onConnected(player: RpgPlayer) {
-        player.setGraphic('male012')
-        player.setHitbox(16, 16)
-        player.changeMap('simplemap')
+    async onConnected(player: RpgPlayer) {
+        player.setGraphic('male012');
+        player.setHitbox(16, 16);
+        const playerModel = await Player.findOne();
+        console.log(playerModel);
+        const position = playerModel ? playerModel.position : {
+            x: 294,
+            y: 481,
+            z: 0
+        };
+        await player.changeMap('simplemap', position);
+        // player.setVariable('worldPositionX',) ;
     },
-    onDisconnected(player: RpgPlayer) {
-        console.log(player.worldPositionX);
-        console.log(player.getCurrentMap());
+    async onDisconnected(player: RpgPlayer) {
+        let playerModel = await Player.findOne();
+        if (!playerModel) {
+            playerModel = new Player();
+        }
+
+        console.log(player.position);
+        playerModel.position = player.position;
+        console.log(await playerModel.save());
     },
     onInput(player: RpgPlayer, {input}) {
-        // console.log(player.map());
-
         if (input == Control.Back) {
             player.callMainMenu()
         }

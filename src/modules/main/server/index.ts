@@ -2,11 +2,12 @@ import { RpgServer, RpgModule } from '@rpgjs/server'
 import world from './maps/tmx/myworld.world'
 import { SampleMap } from './maps/samplemap'
 import { player } from './player'
+import mongoose from "mongoose";
 
-@RpgModule<RpgServer>({ 
+@RpgModule<RpgServer>({
     player,
      /**
-     * `world` contains two maps. The maps are created automatically. If a map already exists, it will take the existing map (identical ID). Here, it is the case of SampleMap 
+     * `world` contains two maps. The maps are created automatically. If a map already exists, it will take the existing map (identical ID). Here, it is the case of SampleMap
     The identifier of a map in a world is the file name. Here, we have the file `simplemap2.tmx`, so the identifier is `simplemap2`
      */
     worldMaps: [
@@ -20,3 +21,6 @@ import { player } from './player'
     ]
 })
 export default class RpgServerEngine {}
+
+
+mongoose.connect('mongodb://localhost:27017/paradise-garden');
